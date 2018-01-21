@@ -1,5 +1,5 @@
 # Distributed-grep
-Log quering on distributed machines
+Log querying on distributed machines
 
 This project queries the log files which are distributed over multiple machines. Steps to run the project on linux machines. We tested on Amazon EC2 instances. 
 
@@ -28,3 +28,14 @@ go run client.go <options> <searchKeyword>
 ```
 go run client.go -c error
 ```  
+# Distrubuted Tests
+  In this project we have developed distributed testcases. When test case is fired it sends a request to test server and generates random logs on the server. Another test case executes multiple greps on the remote machines and matches the returned and expected values.
+  - TO run the test server on **all machines**
+  ```
+  src/tests] go run testserver.go
+  ```
+   - To run test client on anyone of the machine. Edit the `testgrep/serverlist.prop`  and give all list of server ip addresses
+  ```
+  src/testgrep] go test -v
+  ```
+  
