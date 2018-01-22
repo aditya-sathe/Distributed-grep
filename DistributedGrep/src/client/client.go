@@ -44,11 +44,15 @@ func main() {
 	}
 
 	// Print results from server
-	for i := range ipList {
-		serverResult := <-c
-		fmt.Println(serverResult)
-		fmt.Printf("END----------%d\n", i)
-	
+	for i, v := range ipList {
+		// Add timeout in case chan does not return
+		select {
+		    case serverResult := <-c:
+				fmt.Println(serverResult)
+				fmt.Printf("END----------%d\n", i)
+		    case <-time.After(time.Second * 1):
+		        fmt.Println("Response timeout from ", v)
+	    }	
 	}
 
 	t1 := time.Now()

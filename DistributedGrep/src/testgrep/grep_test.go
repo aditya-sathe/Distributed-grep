@@ -31,28 +31,32 @@ func TestGenerateLogs(t *testing.T) {
 	}	
 }
 
+
 func TestGrep(t *testing.T) {
 	cases := []struct {
         name     string
         keyword  string
-        expected int
+        expected string
     }{
-        {"frequent", "runGrep f", 100},
-        {"somewhat", "runGrep s", 25},
-        {"rare", "runGrep r", 1},
+        {"frequent", "runGrep f", "\n100"},
+        {"somewhat", "runGrep s", "\n25"},
+        {"rare", "runGrep r", "\n1"},
     }
 	
 	c := make(chan string)
 	ipList = getIpList()
-    for _, tc := range cases {
-        t.Run(tc.name, func(t *testing.T) {
-	        go utils.SendToServer(ipList[0], []string{"test", tc.keyword}, c)
-			serverResult := <- c
-            if !strings.Contains(serverResult,string(tc.expected)) {
-                t.Fatalf("expected wordcount from machine %s is %d, but got %s", ipList[0], tc.expected, serverResult)
-            }
-        })
-    }
+	for _,ip := range ipList {
+	    for _, tc := range cases {
+	        t.Run(tc.name, func(t *testing.T) {
+		        go utils.SendToServer(ip, []string{"test", tc.keyword}, c)
+				serverResult := <- c
+				t.Log("Server Result: " , serverResult)
+	            if !strings.Contains(serverResult,string(tc.expected)) {
+	                t.Fatalf("expected wordcount from machine %s is %d, but got %s", ip, tc.expected, serverResult)
+	            }
+	        })
+	    }
+	}    
 }
 
 func getIpList() []string{
