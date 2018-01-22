@@ -26,7 +26,7 @@ func main() {
 		os.Exit(1)
 	}
 	
-	localIp = getLocalIP()
+	localIp = utils.GetLocalIP()
 	
 	for {
 		conn, err := listener.Accept()
@@ -63,21 +63,3 @@ func grepLog(conn net.Conn) {
 	conn.Close()
 }
 
-
-
-// GetLocalIP returns the non loopback local IP of the host
-func getLocalIP() string {
-    addrs, err := net.InterfaceAddrs()
-    if err != nil {
-        return "Error getting IP address"
-    }
-    for _, address := range addrs {
-        // check the address type and if it is not a loopback the display it
-        if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-            if ipnet.IP.To4() != nil {
-                return ipnet.IP.String()
-            }
-        }
-    }
-    return ""
-}
