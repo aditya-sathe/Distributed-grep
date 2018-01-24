@@ -18,14 +18,16 @@ var(
 )
 
 func main() {
-	fmt.Println("Logging server listening on port :" + PORT)
 
 	listener, err := net.Listen("tcp", ":" + PORT)
+	
 	if err != nil {
 		println("error listening:", err.Error())
 		os.Exit(1)
 	}
 	
+	fmt.Println("Logging server listening on port :" + PORT)
+
 	localIp = utils.GetLocalIP()
 	
 	for {
@@ -39,8 +41,11 @@ func main() {
 	}
 }
 
-
+/*
+ * Receive the data from client and exec grep using the keyword 
+ */
 func grepLog(conn net.Conn) {
+	
 	recvBuf := make([]byte, BUF_LEN)
 	_, err := conn.Read(recvBuf)
 
@@ -49,6 +54,7 @@ func grepLog(conn net.Conn) {
 		return
 	}
 	
+	// convert bytes to string
 	strs := []string{}
     gob.NewDecoder(bytes.NewReader(recvBuf)).Decode(&strs)
     fmt.Println("Received String: ", strs)
@@ -57,9 +63,9 @@ func grepLog(conn net.Conn) {
 	// exec the grep
 	results = utils.ExecGrep(strs, os.Args[1], localIp)
 	
+	// convert result to bytes and send back to client
 	sendBuf := make([]byte, len(results))
 	copy(sendBuf, string(results))
 	conn.Write(sendBuf)
 	conn.Close()
 }
-

@@ -1,0 +1,6 @@
+
+*.exe
+*.exe
+DistributedGrep/.project
+*.a
+DistributedGrep/.settings/com.googlecode.goclipse.core.prefs

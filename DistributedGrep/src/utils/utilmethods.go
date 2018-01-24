@@ -7,13 +7,15 @@ import (
 	"io/ioutil"
 	"net"
 	"encoding/gob"
+	"time"
 )
 
 
 /*
- * executes grep in unix shell
+ * Executes grep in unix shell
  */
 func ExecGrep(cmdArgs []string, logName string, machineName string) string {
+	
 	cmdArgs = append(cmdArgs, logName) 
 	fmt.Println("Complete String: ", cmdArgs)
 	
@@ -35,16 +37,11 @@ func ExecGrep(cmdArgs []string, logName string, machineName string) string {
 }
 
 /*
- * Sends a message to a server, and returns the file into a channel
+ * Sends a message to a server, and returns the result into a channel
  */
 func SendToServer(ipAddr string, message []string, c chan string) {
-	tcpAddr, err := net.ResolveTCPAddr("tcp4", ipAddr)
-	if err != nil {
-		c <- err.Error()
-		return
-	}
-
-	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	
+	conn, err := net.DialTimeout("tcp", ipAddr, time.Duration(1)*time.Second)
 	if err != nil {
 		c <- err.Error()
 		return
@@ -69,7 +66,9 @@ func SendToServer(ipAddr string, message []string, c chan string) {
 	c <- string(result)
 }
 
-// GetLocalIP returns the non loopback local IP of the host
+/*  
+ * Returns the non loopback local IP of the host
+ */
 func GetLocalIP() string {
     addrs, err := net.InterfaceAddrs()
     if err != nil {

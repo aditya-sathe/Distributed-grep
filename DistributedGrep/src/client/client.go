@@ -18,7 +18,7 @@ func main() {
 	file, _ := os.Open(SERVER_LIST)
 	scanner := bufio.NewScanner(file)
 
-	//Compile list of ip address from serverlist.prop
+	// Compile list of ip address from serverlist.prop
 	for scanner.Scan() {
 		var ip = scanner.Text()
 		ip = ip + ":" + SERVER_PORT
@@ -38,21 +38,16 @@ func main() {
 
 	serverInput := os.Args 
 
-	// Connect to every server in serverlist.prop
+	// Send data to every server in serverlist.prop
 	for _, v := range ipList {
 		go utils.SendToServer(v, serverInput, c)
 	}
 
 	// Print results from server
-	for i, v := range ipList {
-		// Add timeout in case chan does not return
-		select {
-		    case serverResult := <-c:
-				fmt.Println(serverResult)
-				fmt.Printf("END----------%d\n", i)
-		    case <-time.After(time.Second * 1):
-		        fmt.Println("Response timeout from ", v)
-	    }	
+	for i, _ := range ipList {
+		serverResult := <-c:
+		fmt.Println(serverResult)
+		fmt.Printf("END----------%d\n", i)	
 	}
 
 	t1 := time.Now()

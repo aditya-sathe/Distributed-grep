@@ -16,6 +16,10 @@ var(
 	ipList []string
 )
 
+/*
+ * Test to generate some random logs on the server. 
+ * The log generated will have frequent/somewhatfreq/rare keywords
+ */
 func TestGenerateLogs(t *testing.T) {
 	ipList = getIpList()
 	
@@ -31,7 +35,9 @@ func TestGenerateLogs(t *testing.T) {
 	}	
 }
 
-
+/*
+ * Test will exec multiple grep on the logs generated in Test1 and compare the returned result.
+ */
 func TestGrep(t *testing.T) {
 	cases := []struct {
         name     string
@@ -59,6 +65,9 @@ func TestGrep(t *testing.T) {
 	}    
 }
 
+/*
+ * Get a list of ip address from file   
+ */ 
 func getIpList() []string{
 	ipList := []string{}
 	file, _ := os.Open(SERVER_LIST)

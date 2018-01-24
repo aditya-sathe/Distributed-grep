@@ -42,6 +42,9 @@ func main() {
 	}
 }
 
+/*
+ *  Receive the test client request and   
+ */
 func receiveTestClientReq(conn net.Conn) {
 	recvBuf := make([]byte, BUF_LEN)
 	_, err := conn.Read(recvBuf)
@@ -78,6 +81,9 @@ func receiveTestClientReq(conn net.Conn) {
 	conn.Close()
 }
 
+/*
+ * Print test logs    
+ */
 func generateLogs(ip string) {
 	fmt.Println("Genearate Logs")
 	rare := "rare"
@@ -103,9 +109,7 @@ func generateLogs(ip string) {
 }
 
 /*
- * Creates a test log file and appends the required strings
- * @param lines a slice of lines that we will append to the given file name
- * @param fileName of the test log file we are going to create
+ * Creates a test log file and appends the lines to it
  */
 func writeLines(lines []string, fileName string) error {
 	fmt.Println("Write lines to file")
