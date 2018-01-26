@@ -46,6 +46,9 @@ func SendToServer(ipAddr string, message []string, c chan string) {
 		c <- err.Error()
 		return
 	}
+	
+	defer conn.Close()
+	
 	// convert string array to bytes
     buf := &bytes.Buffer{}
     gob.NewEncoder(buf).Encode(message[1:])

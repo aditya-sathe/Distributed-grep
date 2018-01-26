@@ -15,7 +15,15 @@ const (
 
 func main() {
 	ipList := []string{}
-	file, _ := os.Open(SERVER_LIST)
+	
+	file, err := os.Open(SERVER_LIST)
+	
+	if( err!= nil){
+		fmt.Errorf("Error reading file: ", SERVER_LIST)
+		os.Exit(1)
+	}
+	
+	defer file.Close()	
 	scanner := bufio.NewScanner(file)
 
 	// Compile list of ip address from serverlist.prop
@@ -24,7 +32,12 @@ func main() {
 		ip = ip + ":" + SERVER_PORT
 		ipList = append(ipList, ip)
 	}
-
+	
+	if err := scanner.Err(); err !=nil{
+		fmt.Errorf("Error scanning file: %s - %s", SERVER_LIST, err)
+		os.Exit(1)
+	}
+	
 	t0 := time.Now()
 
 	if len(os.Args) < 2 {
@@ -45,7 +58,7 @@ func main() {
 
 	// Print results from server
 	for i, _ := range ipList {
-		serverResult := <-c:
+		serverResult := <-c
 		fmt.Println(serverResult)
 		fmt.Printf("END----------%d\n", i)	
 	}
